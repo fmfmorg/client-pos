@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "dev": "next dev -p 1129",
+    "build": "next build",
+    "start": "next start -p 1129",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.0",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.6",
+    "@mui/material": "^6.4.6",
+    "@mui/material-nextjs": "^6.4.3",
+    "@mui/system": "^6.4.6",
+    "@mui/x-date-pickers": "^8.9.0",
+    "dayjs": "^1.11.13",
+    "next": "^15.1.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.5",
+    "@types/react": "19.0.10",
+    "typescript": "5.7.3"
+  }
+}

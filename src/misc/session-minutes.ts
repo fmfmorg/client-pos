@@ -1,0 +1,1 @@
+export const sessionMinutes = 12 * 60
