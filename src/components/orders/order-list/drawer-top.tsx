@@ -3,9 +3,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useContext, useEffect, useRef, useState } from "react";
-import { IDB } from "src/hooks/class-db";
+import { IDB } from "../../../hooks/class-db";
 import dayjs, { Dayjs } from 'dayjs';
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces";
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../../interfaces";
 import { DateContext } from "../contexts";
 
 const DateSelector = () => {
@@ -23,6 +23,7 @@ const DateSelector = () => {
         v.set('minute',0)
         v.set('second',0)
         v.set('millisecond',0)
+        // console.log(v.valueOf())
         updateDate(v.valueOf())
     }
 

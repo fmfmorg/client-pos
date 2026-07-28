@@ -1,8 +1,8 @@
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import { useEffect, useRef, useState } from "react";
-import { IDB } from "src/hooks/class-db";
-import { StoreNames } from "src/interfaces";
+import { IDB } from "../../../hooks/class-db";
+import { StoreNames } from "../../../interfaces";
 import MainTypeItem from "./main-type";
 
 const drawerWidth = 200;

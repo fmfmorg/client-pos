@@ -2,8 +2,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { DateContext, UpdateDateContext } from './date-contexts';
-import { IDB } from 'src/hooks/class-db';
-import { CompleteOrderStoreNames, ICompleteOrder } from 'src/interfaces';
+import { IDB } from '../../hooks/class-db';
+import { CompleteOrderStoreNames, ICompleteOrder } from '../../interfaces';
 
 const MyDatePicker = ({isStart}:{isStart:boolean}) => {
     const idb = useRef<IDB>(null);

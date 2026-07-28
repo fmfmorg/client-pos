@@ -1,8 +1,8 @@
 import FormControlLabel from "@mui/material/FormControlLabel"
 import ListItem from "@mui/material/ListItem"
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { IProductTypeMapItem, ISpecification, StoreNames } from "src/interfaces"
+import { IDB } from "../../../hooks/class-db"
+import { IProductTypeMapItem, ISpecification, StoreNames } from "../../../interfaces"
 import { SubTypeContext } from "../contexts"
 import Checkbox from "@mui/material/Checkbox"
 

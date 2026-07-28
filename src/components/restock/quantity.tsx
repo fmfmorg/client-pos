@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField"
 import { useRef } from "react"
-import { IDB } from "src/hooks/class-db"
+import { IDB } from "../../hooks/class-db"
 
 const Quantity = ({id}:{id:string}) => {
     const ref = useRef<HTMLInputElement>(null)

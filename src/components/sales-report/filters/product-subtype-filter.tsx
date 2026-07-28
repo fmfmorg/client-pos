@@ -3,8 +3,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { useContext, useEffect, useId, useState } from 'react';
-import { IDB } from 'src/hooks/class-db';
-import { ISpecification, StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { ISpecification, StoreNames } from '../../../interfaces';
 import { ProductTypeContext } from '../contexts';
 
 const ProductSubTypeFilter = () => {

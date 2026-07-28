@@ -1,8 +1,8 @@
 import { CustomEventKeys, dispatchNewEvent } from "@misc";
 import Button from "@mui/material/Button"
 import { useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
-import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem } from "src/interfaces";
+import { IDB } from "../../../hooks/class-db";
+import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem } from "../../../interfaces";
 
 const DownloadOrderButton = () => {
     const idb = useRef<IDB>(null);
@@ -18,6 +18,8 @@ const DownloadOrderButton = () => {
             if (!resp.ok){
                 const text = await resp.text()
                 console.log(text)
+                dispatchNewEvent(CustomEventKeys.PRINTING_END)
+                return 
             }
             const {orders, orderItems, orderDiscountItems} = await resp.json() as {
                 orders: ICompleteOrder[];

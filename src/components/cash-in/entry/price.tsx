@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { useEffect, useRef, useState } from 'react'
-import { IDB } from 'src/hooks/class-db'
-import { IProductExternal, StoreNames } from 'src/interfaces'
+import { IDB } from '../../../hooks/class-db'
+import { IProductExternal, StoreNames } from '../../../interfaces'
 
 const Price = ({id}:{id:string}) => {
     const idb = useRef<IDB>(null)

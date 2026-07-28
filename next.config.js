@@ -6,6 +6,10 @@ module.exports = {
         webpackMemoryOptimizations: true,
     },
     devIndicators:false,
+    webpack(config) {
+        config.output.globalObject = 'self';
+        return config;
+    },
     async rewrites() {
         return [
             {

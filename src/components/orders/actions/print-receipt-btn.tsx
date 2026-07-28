@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button"
 import PrintIcon from '@mui/icons-material/Print';
 import { useContext, useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
+import { IDB } from "../../../hooks/class-db";
 import { OrderNumberContext } from "@components/orders/contexts";
 import { CustomEventKeys, dispatchNewEvent } from "@misc";
 import Stack from "@mui/material/Stack";

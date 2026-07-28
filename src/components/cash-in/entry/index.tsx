@@ -2,20 +2,20 @@ import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { FormEvent, useContext, useEffect, useId, useRef, useState } from 'react';
-import { IDB } from 'src/hooks/class-db';
 import { CustomEventKeys } from '@misc';
 import Grid from '@mui/material/Grid2'
 import { NumberField } from '@base-ui-components/react/number-field';
 import styles from './index.module.css';
-import MinusIcon from 'src/misc/minus-icon';
-import PlusIcon from 'src/misc/plus-icon';
 import Button from '@mui/material/Button';
 import Context from '@components/contexts';
 import Box from '@mui/material/Box'
 import Images from './images';
 import Price from './price';
-import { OrderStatusEnum } from 'src/misc/order-status';
-import { IOrder, StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { IOrder, StoreNames } from '../../../interfaces';
+import { OrderStatusEnum } from '../../../misc/order-status';
+import MinusIcon from '../../../misc/minus-icon';
+import PlusIcon from '../../../misc/plus-icon';
 
 const EntryComponent = () => {
     const formID = useId()
@@ -46,7 +46,7 @@ const EntryComponent = () => {
         else setID(null)
     }
 
-    const quantityOnChange = (value: number | null, _: Event | undefined) => {
+    const quantityOnChange = (value: number, _: any) => {
         if (!!value) setQuantity(value)
     }
 

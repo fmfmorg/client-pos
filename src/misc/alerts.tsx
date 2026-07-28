@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Snackbar from '@mui/material/Snackbar';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import { CustomEventKeys } from "@misc";
+import { IAlertMessage } from "../interfaces";
 
 const Alerts = () => {
     const [open,setOpen] = useState(false)
@@ -28,6 +29,10 @@ const Alerts = () => {
     const onNoOrderToUpload = () => openSnackbar(6000,'No order to upload','success')
     const onUploadSuccess = () => openSnackbar(6000, 'Upload successful', 'success')
     const onUploadFailed = () => openSnackbar(6000, 'Upload failed', 'error')
+    const onStockUpdateReport = (e:CustomEvent<IAlertMessage>) => {
+        const {message,color} = e.detail
+        openSnackbar(6000, message, color)
+    }
 
     useEffect(()=>{
         document.addEventListener(CustomEventKeys.PRODUCTS_UPDATE_SUCCESSFUL,onProductUpdateSuccessful)
@@ -37,6 +42,7 @@ const Alerts = () => {
         document.addEventListener(CustomEventKeys.NO_ORDER_TO_UPLOAD,onNoOrderToUpload)
         document.addEventListener(CustomEventKeys.UPLOAD_SUCCESS, onUploadSuccess)
         document.addEventListener(CustomEventKeys.UPLOAD_FAILED,onUploadFailed)
+        document.addEventListener(CustomEventKeys.STOCK_UPDATE_REPORT,onStockUpdateReport)
 
         return () => {
             document.removeEventListener(CustomEventKeys.PRODUCTS_UPDATE_SUCCESSFUL,onProductUpdateSuccessful)
@@ -46,6 +52,7 @@ const Alerts = () => {
             document.removeEventListener(CustomEventKeys.NO_ORDER_TO_UPLOAD,onNoOrderToUpload)
             document.removeEventListener(CustomEventKeys.UPLOAD_SUCCESS, onUploadSuccess)
             document.removeEventListener(CustomEventKeys.UPLOAD_FAILED,onUploadFailed)
+            document.removeEventListener(CustomEventKeys.STOCK_UPDATE_REPORT,onStockUpdateReport)
         }
     },[])
 

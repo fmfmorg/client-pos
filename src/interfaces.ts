@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export interface IOrder {
     id:number;
     status:number;
@@ -81,6 +83,7 @@ export interface IProductExternal {
     keepInCollection:number;
     stock?:number;
     dbToBeUpdated?:boolean;
+    stockLevelToBeUpdated?:boolean;
 }
 
 export interface IProductInternal {
@@ -120,4 +123,9 @@ export interface IRefundItem {
     note:string;
     uploaded:boolean;
     dbToBeUpdated:boolean;
+}
+
+export interface IAlertMessage {
+    color:AlertColor;
+    message:string;
 }

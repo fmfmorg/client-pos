@@ -4,13 +4,14 @@ import ImageListItemBar from "@mui/material/ImageListItemBar"
 import Typography from "@mui/material/Typography"
 import { SyntheticEvent, useEffect, useRef, useState } from "react"
 import Rating from '@mui/material/Rating';
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "src/interfaces"
+import { IDB } from "../../hooks/class-db"
+import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "../../interfaces"
 
 const SingleItem = ({id}:{id:string}) => {
     const idb = useRef<IDB>(null)
     const [internalID,setInternalID] = useState('')
     const [keepInColl,setKeepInColl] = useState(0)
+    const [displayQty,setDisplayQty] = useState(0)
     const [stockQty,setStockQty] = useState(0)
     const [price,setPrice] = useState(0)
     const [url,setURL] = useState('#')
@@ -43,7 +44,11 @@ const SingleItem = ({id}:{id:string}) => {
             const orderQty = allOrderItems.filter(e => e.productID === id).map(e => e.quantity).reduce((a,b)=>a+b,0)
             const refundQty = allRefundItems.filter(e => e.productID === id).map(e => e.quantity).reduce((a,b)=>a+b,0)
             setVariation(productInternal.variation)
-            setStockQty(Math.max(receivedQuantity - orderQty + refundQty,0))
+
+            const _stockQty = Math.max(receivedQuantity - orderQty + refundQty,0)
+            setStockQty(_stockQty)
+            setDisplayQty(_stockQty - (productExternal.stock || 0))
+            
             setURL(productInternal.url)
         } catch (e) {}
     }
@@ -69,7 +74,7 @@ const SingleItem = ({id}:{id:string}) => {
                 />
             </a>
             <ImageListItemBar 
-                title={<Typography variant='body2'>{id.substring(1)} - £{(price * 0.01).toFixed(0)} - {stockQty}pc</Typography>} 
+                title={<Typography variant='body2'>{id.substring(1)} - £{(price * 0.01).toFixed(0)} - {displayQty}pc - {stockQty}pc</Typography>} 
                 actionIcon={
                     <Rating 
                         value={keepInColl}

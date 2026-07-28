@@ -2,23 +2,23 @@ import Box from '@mui/material/Box'
 import Context from "@components/contexts"
 import { CustomEventKeys, ElementID } from "@misc"
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
 import DiscountRow from './discount-row'
 import Stack from '@mui/system/Stack'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 import ManualDiscountPercentageComponent from './manual-discount-percentage'
 import ManualDiscountAmountComponent from './manual-discount-amount'
-import { ManualDiscountFixedAmount, ManualDiscountPercentage } from 'src/misc/discounts'
 import CardBtn from './card'
 import Cash from './cash'
 import BackToEditOrderBtn from './back-to-edit-order'
 import SubmitCashOrderBtn from './submit-cash-order-btn'
-import { OrderStatusEnum } from 'src/misc/order-status'
-import { IOrder, IOrderDiscountItem, StoreNames } from 'src/interfaces'
 import ReprintReceipt from './reprint-receipt'
 import NextOrderBtn from './next-order-btn'
 import SubmitCardOrderBtn from './submit-card-order-btn'
+import { IDB } from '../../../hooks/class-db'
+import { OrderStatusEnum } from '../../../misc/order-status'
+import { IOrder, IOrderDiscountItem, StoreNames } from '../../../interfaces'
+import { ManualDiscountFixedAmount, ManualDiscountPercentage } from '../../../misc/discounts'
 
 const Summary = () => {
     const { currentOrderID } = useContext(Context)
@@ -151,7 +151,7 @@ const Summary = () => {
                         <Typography sx={{fontSize:'2.5rem !important',fontWeight:'900'}} id={ElementID.AMOUNT_RECEIVED}>{(cashReceived * 0.01).toFixed(2)}</Typography>
                     </Stack>}
                 </Stack>
-                {showCashAmount && subtotal - discountTotal !== cashReceived && <Stack direction='row' justifyContent='space-between' sx={{px:1,backgroundColor:'#cc0000','* p, p':{color:'#fff'}}}>
+                {showCashAmount && Math.round(subtotal - discountTotal) !== Math.round(cashReceived) && <Stack direction='row' justifyContent='space-between' sx={{px:1,backgroundColor:'#cc0000','* p, p':{color:'#fff'}}}>
                     <Stack direction='column' justifyContent='center'><Typography>Change</Typography></Stack>
                     <Typography sx={{fontSize:'2.5rem !important',fontWeight:'700'}}>{((cashReceived - subtotal + discountTotal) * 0.01).toFixed(2)}</Typography>
                 </Stack>}

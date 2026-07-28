@@ -1,13 +1,16 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
+
 import { NumberField } from '@base-ui-components/react/number-field';
 import styles from './index.module.css';
-import MinusIcon from "src/misc/minus-icon";
-import PlusIcon from "src/misc/plus-icon";
+
 import { CustomEventKeys } from "@misc";
 import Context from "@components/contexts";
-import { OrderStatusEnum } from "src/misc/order-status";
-import { IOrder, IOrderItem, StoreNames } from "src/interfaces";
+import { OrderStatusEnum } from "../../../../misc/order-status";
+import { IDB } from "../../../../hooks/class-db";
+import { IOrder, IOrderItem, StoreNames } from "../../../../interfaces";
+import MinusIcon from "../../../../misc/minus-icon";
+import PlusIcon from "../../../../misc/plus-icon";
+
 
 const QuantityField = ({id}:{id:number}) => {
     const {currentOrderID} = useContext(Context)
@@ -63,7 +66,7 @@ const QuantityField = ({id}:{id:number}) => {
         } catch (e) {}
     }
 
-    const quantityOnChange = (value: number | null, _: Event | undefined) => {
+    const quantityOnChange = (value: number, _: any) => {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = setTimeout(updateQuantity,50,value)
     }

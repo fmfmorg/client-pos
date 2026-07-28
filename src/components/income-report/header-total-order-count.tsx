@@ -3,9 +3,9 @@ import Stack from "@mui/material/Stack"
 import TableCell from "@mui/material/TableCell"
 import Typography from "@mui/material/Typography"
 import { useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces"
-import { DateContext } from "src/misc/date-selector/date-contexts"
+import { IDB } from "../../hooks/class-db"
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../interfaces"
+import { DateContext } from "../../misc/date-selector/date-contexts"
 
 const HeaderTotalOrderCount = () => {
     const broadcastChannel = useRef<BroadcastChannel>(null)

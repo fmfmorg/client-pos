@@ -6,10 +6,10 @@ import Stack from "@mui/material/Stack"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import { FormEvent, useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { IOrder, IOrderDiscountItem, StoreNames } from "src/interfaces"
-import { ManualDiscountFixedAmount } from "src/misc/discounts"
-import { OrderStatusEnum } from "src/misc/order-status"
+import { IOrder, IOrderDiscountItem, StoreNames } from "../../../interfaces"
+import { ManualDiscountFixedAmount } from "../../../misc/discounts"
+import { OrderStatusEnum } from "../../../misc/order-status"
+import { IDB } from "../../../hooks/class-db"
 
 const EditField = ({toggle}:{toggle:()=>void;}) => {
     const {currentOrderID} = useContext(Context)

@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button"
 import { useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
+import { IDB } from "../../../hooks/class-db";
 
 const UpdateProductsButton = () => {
     const idb = useRef<IDB>(null);

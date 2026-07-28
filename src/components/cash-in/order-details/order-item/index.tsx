@@ -5,9 +5,9 @@ import TableCell from "@mui/material/TableCell"
 import TableRow from "@mui/material/TableRow"
 import Typography from "@mui/material/Typography"
 import { useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
 import QuantityField from "./quantity"
-import { IOrderItem, IProductExternal, IProductInternal, ISkuMapItem, StoreNames } from "src/interfaces"
+import { IDB } from "../../../../hooks/class-db"
+import { IOrderItem, IProductExternal, IProductInternal, ISkuMapItem, StoreNames } from "../../../../interfaces"
 
 const Image = ({id}:{id:string}) => {
     const [imgSrc,setImgSrc] = useState('')

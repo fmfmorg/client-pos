@@ -1,8 +1,8 @@
 import { CustomEventKeys, dispatchNewEvent } from "@misc";
 import Button from "@mui/material/Button"
 import { useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces";
+import { IDB } from "../../../hooks/class-db";
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../../interfaces";
 
 const UpdateIdbDataButton = () => {
     const idb = useRef<IDB>(null);

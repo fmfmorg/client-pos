@@ -1,8 +1,8 @@
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { IDB } from 'src/hooks/class-db';
-import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from '../../../interfaces';
 import { DateContext } from '../../../misc/date-selector/date-contexts';
 import Typography from '@mui/material/Typography';
 import Images from './images';

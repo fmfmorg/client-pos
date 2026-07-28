@@ -1,8 +1,8 @@
 import Typography from "@mui/material/Typography"
 import { FormEvent, useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
+import { IDB } from "../../../hooks/class-db"
 import { ProductIdContext } from "../contexts"
-import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "src/interfaces"
+import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "../../../interfaces"
 import TableContainer from "@mui/material/TableContainer"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -13,11 +13,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import Stack from "@mui/system/Stack"
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button"
+import { CustomEventKeys, dispatchNewEvent } from "@misc"
 
 const Stock = () => {
     const {productID} = useContext(ProductIdContext)
     const stockShowRef = useRef<HTMLDivElement>(null)
-    const stockEditRef = useRef<HTMLDivElement>(null)
+    const stockEditRef = useRef<HTMLFormElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
     const [inShop,setInShop] = useState(0)
     const [stock,setStock] = useState(0)
@@ -88,9 +89,11 @@ const Stock = () => {
             try {
                 const p = await idb.current.getItem(productID,StoreNames.ProductsExternal) as IProductExternal
                 p.stock = value
+                p.stockLevelToBeUpdated = true
                 
                 await idb.current.updateItem(p,StoreNames.ProductsExternal)
                 setStock(value)
+                dispatchNewEvent(CustomEventKeys.STOCK_TO_BE_UPDATED,productID)
             } catch (e) {}
         }
 

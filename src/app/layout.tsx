@@ -3,7 +3,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Roboto_Mono, Roboto } from 'next/font/google';
 import './global.css'
 import { ThemeProvider } from '@mui/material/styles';
-import theme from 'src/misc/theme';
+import theme from '../misc/theme';
 
 const roboto = Roboto({
   subsets: ['latin'],

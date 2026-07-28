@@ -4,11 +4,11 @@ import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableContainer from "@mui/material/TableContainer"
 import { useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
 import OrderItem from "./order-item"
 import { CustomEventKeys, sleep } from "@misc"
 import Box from "@mui/material/Box"
-import { IOrderItem, StoreNames } from "src/interfaces"
+import { IDB } from "../../../hooks/class-db"
+import { IOrderItem, StoreNames } from "../../../interfaces"
 
 const OrderDetails = () => {
     const containerRef = useRef<HTMLDivElement>(null)

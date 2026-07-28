@@ -5,8 +5,8 @@ import Stack from "@mui/material/Stack"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces"
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../../../interfaces"
+import { IDB } from "../../../../hooks/class-db"
 
 const Notes = () => {
     const {orderNumber} = useContext(OrderNumberContext)

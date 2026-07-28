@@ -2,8 +2,8 @@ import Button from "@mui/material/Button"
 import PrintIcon from '@mui/icons-material/Print';
 import { useContext, useEffect, useRef } from "react";
 import Context from "@components/contexts";
-import { IDB } from "src/hooks/class-db";
-import { IOrder, StoreNames } from "src/interfaces";
+import { IDB } from "../../../hooks/class-db";
+import { IOrder, StoreNames } from "../../../interfaces";
 import { CustomEventKeys, dispatchNewEvent } from "@misc";
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 

@@ -5,7 +5,6 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid2';
 import { useEffect, useRef, useState } from 'react';
-import { IDB } from 'src/hooks/class-db';
 import Alerts from '../../misc/alerts';
 import OrderList from './order-list';
 import Context from '@components/contexts';
@@ -20,10 +19,15 @@ import UploadOrderButtons from './toolbar-btns/upload-orders';
 import DownloadOrderButton from './toolbar-btns/download-orders';
 import UpdateIdbDataButton from './toolbar-btns/update-db-data';
 import UpdateProductsButton from './toolbar-btns/update-products';
+import { IDB } from '../../hooks/class-db';
+import SetAllOrdersAsUploaded from './toolbar-btns/set-all-orders-as-uploaded';
+import UpdateAllStockLevel from './toolbar-btns/update-all-stock-level';
+import DownloadStockLevelsFromDB from './toolbar-btns/download-stock-level-from-db';
 
 const entryColumnWidth = 3
 
 const CashIn = () => {
+    const workerRef = useRef<Worker>(null)
     const toolbarRef = useRef<HTMLDivElement>(null)
     const broadcastChannel = useRef<BroadcastChannel>(null)
     const [printing,setPrinting] = useState(false)
@@ -59,6 +63,13 @@ const CashIn = () => {
     useEffect(()=>{
         broadcastChannel.current = new BroadcastChannel(broadcastChannelName)
 
+        // workerRef.current = new Worker(new URL('./workers/sync-worker.ts', import.meta.url))
+        
+        // workerRef.current.onmessage = (e) => console.log(e.data)
+
+        // workerRef.current.postMessage('abc')
+
+
         initDB()
         resizeContainer()
         document.addEventListener(CustomEventKeys.PRINTING_START,printingStart)
@@ -70,6 +81,7 @@ const CashIn = () => {
         document.title = 'Till'
 
         return () => {
+            // workerRef.current.terminate()
             document.removeEventListener(CustomEventKeys.PRINTING_START,printingStart)
             document.removeEventListener(CustomEventKeys.PRINTING_END,printingEnd)
             document.removeEventListener(CustomEventKeys.NEXT_ORDER,onNextOrder)
@@ -90,8 +102,11 @@ const CashIn = () => {
                         <Stack direction='row' columnGap={2}>
                             <UpdateProductsButton />
                             <UploadOrderButtons />
+                            {/* <SetAllOrdersAsUploaded /> */}
                             {/* <DownloadOrderButton /> */}
                             {/* <UpdateIdbDataButton /> */}
+                            {/* <DownloadStockLevelsFromDB /> */}
+                            {/* <UpdateAllStockLevel /> */}
                         </Stack>
                     </Toolbar>
                     <Grid container direction='row' sx={{width:'100%'}} ref={containerRef}>

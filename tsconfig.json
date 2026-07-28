@@ -11,9 +11,11 @@
     "strict": false,
     "noEmit": true,
     "incremental": true,
-    "module": "esnext",
+    // "module": "Node16",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    // "moduleResolution": "node16",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -22,11 +24,11 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@misc": ["src/misc/index"],
-      "@hooks": ["src/hooks/index"],
+      "@components/*": ["./src/components/*"],
+      "@misc": ["./src/misc/index"],
+      "@hooks": ["./src/hooks/index"],
     }
   },
   "include": [

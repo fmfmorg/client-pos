@@ -4,8 +4,8 @@ import TextField from '@mui/material/TextField';
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ProductIdContext } from '../contexts'
 import Stack from '@mui/material/Stack';
-import { IDB } from 'src/hooks/class-db';
-import { StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { StoreNames } from '../../../interfaces';
 import Images from './images';
 import Stock from './stock';
 

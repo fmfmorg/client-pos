@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import { OrderNumberContext } from "../contexts"
-import { IDB } from "src/hooks/class-db"
+import { IDB } from "../../../hooks/class-db"
 import FormGroup from "@mui/material/FormGroup"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Checkbox from "@mui/material/Checkbox"
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces"
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../../interfaces"
 
 const OrderUploadedCheckbox = () => {
     const {orderNumber} = useContext(OrderNumberContext)

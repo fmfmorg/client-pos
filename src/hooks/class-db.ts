@@ -14,9 +14,9 @@ import {
     ICompleteOrderItem,
     ICompleteOrderDiscountItem,
     IRefundItem,
-} from "src/interfaces";
-import { BuyXForY, ManualDiscountFixedAmount, ManualDiscountPercentage, nameBuyXForY } from "src/misc/discounts";
-import { OrderStatusEnum } from "src/misc/order-status";
+} from "../interfaces";
+import { BuyXForY, ManualDiscountFixedAmount, ManualDiscountPercentage, nameBuyXForY } from "../misc/discounts";
+import { OrderStatusEnum } from "../misc/order-status";
 
 type IStockMapObjItem = IProductExternal & {receivedQuantity:number;}
 
@@ -217,10 +217,14 @@ export class IDB {
 
                 if (pExists) {
                     const pObj = mapObj.get(p.id)
-                    p.stock = pObj.stock + qtyReceived - pObj.receivedQuantity
+                    const newStockLevel = pObj.stock + qtyReceived - pObj.receivedQuantity
+                    if (p.stock !== newStockLevel) {
+                        p.stock = newStockLevel
+                        p.stockLevelToBeUpdated = true
+                    }
                     pExternalNew.push(p)
                 } else {
-                    pExternalNew.push({...p,stock:qtyReceived})
+                    pExternalNew.push({...p,stock:qtyReceived,stockLevelToBeUpdated:true})
                 }
             }
 
@@ -641,7 +645,7 @@ export class IDB {
                     const productTypeID = thisInternalProducts.find(e => e.id === thisInternalProductIDs[0]).productTypeID
                     const mainTypeID = productTypeMap.get(productTypeID)
                     let mainTypeName = mainTypeMap.get(mainTypeID).replaceAll('-',' ')
-                    if (![1,5,8].includes(mainTypeID)){
+                    if (![1,5,8,9,11,12,13,14].includes(mainTypeID)){
                         mainTypeName = mainTypeName.substring(0, mainTypeName.length - 1)
                     }
 
@@ -733,7 +737,7 @@ export class IDB {
             this.getItems(CompleteOrderStoreNames.RefundItems) as Promise<IRefundItem[]>,
         ])
 
-        const orders = allOrders.filter(e => !e.uploaded) // allOrders.filter(e => e.id.startsWith('EDH-260124-')) // 
+        const orders = allOrders.filter(e => !e.uploaded) // allOrders.filter(e => e.id.startsWith('EDH-260416-') || e.id.startsWith('EDH-260417-')) // 
         const refundItems = allRefundItems.filter(e => !e.uploaded)
         const ordersUpdated = allOrders.filter(e => e.uploaded && !!e.dbToBeUpdated)
 

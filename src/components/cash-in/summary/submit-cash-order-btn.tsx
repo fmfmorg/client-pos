@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button"
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { useContext, useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
+import { IDB } from "../../../hooks/class-db";
 import Context from "@components/contexts";
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 

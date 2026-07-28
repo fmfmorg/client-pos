@@ -1,8 +1,8 @@
 import TableCell from '@mui/material/TableCell';
 import ImageList from '@mui/material/ImageList';
 import { useEffect, useRef, useState } from 'react';
-import { IDB } from 'src/hooks/class-db';
-import { ISkuMapItem, StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { ISkuMapItem, StoreNames } from '../../../interfaces';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Typography from '@mui/material/Typography';

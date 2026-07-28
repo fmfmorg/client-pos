@@ -2,9 +2,9 @@ import { CustomEventKeys } from "@misc"
 import TableCell from "@mui/material/TableCell"
 import TableRow from "@mui/material/TableRow"
 import { useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
 import Row from "./row"
-import { IOrderDiscountItem, StoreNames } from "src/interfaces"
+import { IDB } from "../../../hooks/class-db"
+import { IOrderDiscountItem, StoreNames } from "../../../interfaces"
 
 const DiscountRow = ({id}:{id:number}) => {
     const idb = useRef<IDB>(null)

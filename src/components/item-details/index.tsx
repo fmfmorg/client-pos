@@ -5,10 +5,13 @@ import { ProductIdContext } from "./contexts"
 import Grid from '@mui/material/Grid2'
 import Selector from "./selector"
 import SalesTable from "./sales"
-import { IDB } from "src/hooks/class-db"
-import { StoreNames } from "src/interfaces"
+import { IDB } from "../../hooks/class-db"
+import { StoreNames } from "../../interfaces"
+import { CustomEventKeys, dispatchNewEvent } from "@misc"
+import Alerts from "../../misc/alerts"
 
 const ItemDetails = () => {
+    const workerRef = useRef<Worker>(null)
     const [productID,setProductID] = useState('')
     const updateProductID = (v:string) => setProductID(v)
     const idb = useRef<IDB>(null)
@@ -52,10 +55,20 @@ const ItemDetails = () => {
         }
         timestamp.current = e.timeStamp
     }
+    const stockUpdated = (e:CustomEvent<string>) => workerRef.current.postMessage(e.detail)
 
     useEffect(()=>{
         document.title = 'Item Details'
         initDB()
+        document.addEventListener(CustomEventKeys.STOCK_TO_BE_UPDATED,stockUpdated)
+
+        workerRef.current = new Worker(new URL('./workers/sync-worker.ts', import.meta.url))
+
+        workerRef.current.onmessage = (e) => dispatchNewEvent(CustomEventKeys.STOCK_UPDATE_REPORT,e.data)
+
+        return () => {
+            workerRef.current.terminate()
+        }
     },[])
 
     useEffect(()=>{
@@ -67,6 +80,7 @@ const ItemDetails = () => {
     },[ids])
 
     return (
+        <>
         <ProductIdContext.Provider value={{productID,updateProductID}}>
             <Grid container direction='row' columnGap={2}>
                 <Selector />
@@ -75,6 +89,8 @@ const ItemDetails = () => {
                 </>}
             </Grid>
         </ProductIdContext.Provider>
+        <Alerts />
+        </>
     )
 }
 

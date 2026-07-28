@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from "react";
-import { IDB } from "src/hooks/class-db";
-import { IProductExternal, ISkuMapItem, StoreNames } from "src/interfaces";
+import { IDB } from "../../hooks/class-db";
+import { IProductExternal, ISkuMapItem, StoreNames } from "../../interfaces";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';

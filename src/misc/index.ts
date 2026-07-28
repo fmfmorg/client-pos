@@ -38,6 +38,9 @@ export enum CustomEventKeys {
     REFUND_SUBMITED = 'refund_submitted',
 
     COLLECTION_ITEMS_UPDATE = 'collection_items_update',
+
+    STOCK_TO_BE_UPDATED = 'stock_to_be_updated',
+    STOCK_UPDATE_REPORT = 'stock_update_report',
 }
 
 export const chargeVAT = false

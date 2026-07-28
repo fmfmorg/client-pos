@@ -1,6 +1,6 @@
 'use client'
 
-import DateSelector from "src/misc/date-selector"
+import DateSelector from "../../misc/date-selector"
 import IncomeTable from "./table"
 
 const IncomeReport = () => {

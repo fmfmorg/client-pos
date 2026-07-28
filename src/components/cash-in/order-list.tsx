@@ -11,10 +11,10 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { Ref, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Context from '@components/contexts';
-import { IDB } from 'src/hooks/class-db';
+import { IDB } from '../../hooks/class-db';
 import { CustomEventKeys } from '@misc';
 import { useTheme } from '@mui/material';
-import { StoreNames } from 'src/interfaces';
+import { StoreNames } from '../../interfaces';
 
 const NewOrderButtonBar = ({ref}:{ref:Ref<HTMLDivElement>}) => {
     const {createNewOrder} = useContext(Context)

@@ -5,11 +5,11 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import InputAdornment from '@mui/material/InputAdornment';
 import { FormEvent, useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { ManualDiscountPercentage } from "src/misc/discounts"
+import { IDB } from "../../../hooks/class-db"
+import { ManualDiscountPercentage } from "../../../misc/discounts"
 import { CustomEventKeys } from "@misc"
-import { IOrder, IOrderDiscountItem, StoreNames } from "src/interfaces"
-import { OrderStatusEnum } from "src/misc/order-status"
+import { IOrder, IOrderDiscountItem, StoreNames } from "../../../interfaces"
+import { OrderStatusEnum } from "../../../misc/order-status"
 
 const EditField = ({toggle}:{toggle:()=>void;}) => {
     const {currentOrderID} = useContext(Context)

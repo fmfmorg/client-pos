@@ -6,8 +6,8 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Stack from "@mui/system/Stack"
 import { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { OrderStatusEnum } from "src/misc/order-status"
+import { IDB } from "../../../hooks/class-db"
+import { OrderStatusEnum } from "../../../misc/order-status"
 
 const Cash = (
     {
@@ -31,7 +31,7 @@ const Cash = (
     const onInputChange = (e:ChangeEvent) => {
         const {value} = e.target as HTMLInputElement
         const tempValue = +value
-        setBtnDisabled(!orderSubtotal || isNaN(tempValue) || tempValue * 100 < orderSubtotal)
+        setBtnDisabled(!orderSubtotal || isNaN(tempValue) || Math.round(tempValue * 100) < Math.round(orderSubtotal))
     }
     const onSubmit = (e:FormEvent) => {
         e.preventDefault()

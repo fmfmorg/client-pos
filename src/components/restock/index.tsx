@@ -5,8 +5,8 @@ import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar/Toolbar"
 import ImageList from '@mui/material/ImageList';
 import { useEffect, useRef, useState } from "react";
-import { IDB } from "src/hooks/class-db";
-import { CompleteOrderStoreNames, ICompleteOrderItem, ISkuMapItem, StoreNames } from "src/interfaces";
+import { IDB } from "../../hooks/class-db";
+import { CompleteOrderStoreNames, ICompleteOrderItem, ISkuMapItem, StoreNames } from "../../interfaces";
 import RestockItem from "./item";
 
 const Restock = () => {

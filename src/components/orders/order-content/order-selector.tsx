@@ -2,8 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { OrderNumberContext } from "../contexts"
 import Autocomplete from "@mui/material/Autocomplete"
 import TextField from "@mui/material/TextField"
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames } from "src/interfaces"
+import { IDB } from "../../../hooks/class-db"
+import { CompleteOrderStoreNames } from "../../../interfaces"
 import { broadcastChannelName, CustomEventKeys } from "@misc"
 
 const OrderSelector = () => {

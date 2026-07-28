@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { DateContext } from "../contexts";
 import ListBody from "./list";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const OrderList = () => {
     const initDate = () => {

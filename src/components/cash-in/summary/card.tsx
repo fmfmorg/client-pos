@@ -1,9 +1,9 @@
 import Button from "@mui/material/Button"
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useContext, useEffect, useRef } from "react";
-import { IDB } from "src/hooks/class-db";
 import Context from "@components/contexts";
-import { OrderStatusEnum } from "src/misc/order-status";
+import { IDB } from "../../../hooks/class-db";
+import { OrderStatusEnum } from "../../../misc/order-status";
 
 const CardBtn = () => {
     const {currentOrderID} = useContext(Context)

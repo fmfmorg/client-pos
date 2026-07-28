@@ -3,8 +3,8 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar'
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ProductIdContext } from '../contexts';
-import { IDB } from 'src/hooks/class-db';
-import { ISkuMapItem, StoreNames } from 'src/interfaces';
+import { IDB } from '../../../hooks/class-db';
+import { ISkuMapItem, StoreNames } from '../../../interfaces';
 import Typography from '@mui/material/Typography';
 
 const Image = ({id}:{id:string}) => (

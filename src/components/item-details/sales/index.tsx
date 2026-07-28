@@ -6,9 +6,9 @@ import TableRow from "@mui/material/TableRow"
 import TableCell from "@mui/material/TableCell"
 import Grid from '@mui/material/Grid2'
 import { useContext, useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
+import { IDB } from "../../../hooks/class-db"
 import { ProductIdContext } from "../contexts"
-import { CompleteOrderStoreNames, ICompleteOrderItem } from "src/interfaces"
+import { CompleteOrderStoreNames, ICompleteOrderItem } from "../../../interfaces"
 import SalesRow from "./row"
 
 const SalesTable = () => {

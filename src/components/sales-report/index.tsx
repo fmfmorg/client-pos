@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import Filters from "./filters"
 import ProductList from "./products"
-import DateSelector from "src/misc/date-selector"
+import DateSelector from "../../misc/date-selector"
 import { ProductTypeContext } from "./contexts"
 
 const SalesReport = () => {

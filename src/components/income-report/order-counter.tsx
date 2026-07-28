@@ -1,8 +1,8 @@
 import { broadcastChannelName, CustomEventKeys } from "@misc"
 import TableCell from "@mui/material/TableCell"
 import { useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames, ICompleteOrder } from "src/interfaces"
+import { IDB } from "../../hooks/class-db"
+import { CompleteOrderStoreNames, ICompleteOrder } from "../../interfaces"
 
 const OrderCounter = (
     {

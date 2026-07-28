@@ -1,8 +1,8 @@
 import TableRow from "@mui/material/TableRow"
 import TableCell from "@mui/material/TableCell"
 import { useEffect, useRef, useState } from "react"
-import { IDB } from "src/hooks/class-db"
-import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem, IRefundItem } from "src/interfaces"
+import { IDB } from "../../../hooks/class-db"
+import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem, IRefundItem } from "../../../interfaces"
 
 const SalesRow = ({id}:{id:number}) => {
     const [dt,setDT] = useState(0)
