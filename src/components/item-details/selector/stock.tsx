@@ -19,9 +19,13 @@ const Stock = () => {
     const {productID} = useContext(ProductIdContext)
     const stockShowRef = useRef<HTMLDivElement>(null)
     const stockEditRef = useRef<HTMLFormElement>(null)
-    const inputRef = useRef<HTMLInputElement>(null)
+    const displayShowRef = useRef<HTMLDivElement>(null)
+    const displayEditRef = useRef<HTMLFormElement>(null)
+    const stockInputRef = useRef<HTMLInputElement>(null)
+    const displayInputRef = useRef<HTMLInputElement>(null)
     const [inShop,setInShop] = useState(0)
-    const [stock,setStock] = useState(0)
+    const [stockQty,setStockQty] = useState(0)
+    const [displayQty,setDisplayQty] = useState(0)
     const [price,setPrice] = useState(0)
     const idb = useRef<IDB>(null)
     const loading = useRef(true)
@@ -56,7 +60,7 @@ const Stock = () => {
             const quantityReceived = Math.min(...productsInternal.map(e => e.receivedQuantity))
 
             // quantity sold
-            const orderItems = allOrderItems.filter(e => e.productID === productID)
+            const orderItems = allOrderItems.filter(e => e.productID === productID && !!e.rl)
             const quantitySold = !!orderItems.length ? orderItems.map(e => e.quantity).reduce((a,b)=>a+b,0) : 0
 
             // quantity returned
@@ -64,27 +68,33 @@ const Stock = () => {
             const quantityReturned = !!refundItems.length ? refundItems.map(e => e.quantity).reduce((a,b)=>a+b,0) : 0
 
             setInShop(Math.max(0, quantityReceived + quantityReturned - quantitySold))
-            setStock(productExternal.stock || 0)
+            setStockQty(productExternal.stock)
+            const _displayQty = Math.max(0, quantityReceived + quantityReturned - quantitySold) - productExternal.stock
+            setDisplayQty(_displayQty)
             setPrice(productExternal.price)
-            inputRef.current.value = !!productExternal.stock ? productExternal.stock.toString() : ''
+            stockInputRef.current.value = !!productExternal.stock ? productExternal.stock.toString() : ''
+            displayInputRef.current.value = !!_displayQty ? _displayQty.toString() : ''
         } catch (e) {}
 
         loading.current = false
 
-        cancelEditOnClick()
+        stockCancelEditOnClick()
+        displayCancelEditOnClick()
     }
-    const editBtnOnClick = () => {
+    const stockEditBtnOnClick = () => {
+        displayCancelEditOnClick()
+
         stockShowRef.current.style.display = 'none'
         stockEditRef.current.style.display = 'flex'
-        inputRef.current.select()
+        stockInputRef.current.select()
     }
-    const cancelEditOnClick = () => {
+    const stockCancelEditOnClick = () => {
         stockShowRef.current.style.display = 'flex'
         stockEditRef.current.style.display = 'none'
     }
-    const updateBtnOnClick = async(e:FormEvent) => {
+    const stockUpdateBtnOnClick = async(e:FormEvent) => {
         e.preventDefault()
-        const value = +inputRef.current.value
+        const value = +stockInputRef.current.value
         if (!isNaN(value)) {
             try {
                 const p = await idb.current.getItem(productID,StoreNames.ProductsExternal) as IProductExternal
@@ -92,12 +102,45 @@ const Stock = () => {
                 p.stockLevelToBeUpdated = true
                 
                 await idb.current.updateItem(p,StoreNames.ProductsExternal)
-                setStock(value)
+                setStockQty(value)
+                setDisplayQty(inShop - value)
                 dispatchNewEvent(CustomEventKeys.STOCK_TO_BE_UPDATED,productID)
             } catch (e) {}
         }
 
-        cancelEditOnClick()
+        stockCancelEditOnClick()
+    }
+
+    const displayEditBtnOnClick = () => {
+        stockCancelEditOnClick()
+
+        displayShowRef.current.style.display = 'none'
+        displayEditRef.current.style.display = 'flex'
+        displayInputRef.current.select()
+    }
+    const displayCancelEditOnClick = () => {
+        displayShowRef.current.style.display = 'flex'
+        displayEditRef.current.style.display = 'none'
+    }
+
+    const displayUpdateBtnOnClick = async(e:FormEvent) => {
+        e.preventDefault()
+        const value = +displayInputRef.current.value
+        if (!isNaN(value)) {
+            const _stockQty = inShop - value
+            try {
+                const p = await idb.current.getItem(productID,StoreNames.ProductsExternal) as IProductExternal
+                p.stock = _stockQty
+                p.stockLevelToBeUpdated = true
+                
+                await idb.current.updateItem(p,StoreNames.ProductsExternal)
+                setStockQty(_stockQty)
+                setDisplayQty(value)
+                dispatchNewEvent(CustomEventKeys.STOCK_TO_BE_UPDATED,productID)
+            } catch (e) {}
+        }
+
+        displayCancelEditOnClick()
     }
 
     useEffect(()=>{
@@ -118,19 +161,30 @@ const Stock = () => {
                     </TableRow>
                     <TableRow>
                         <TableCell><Typography variant="h4" fontWeight={700}>Display:</Typography></TableCell>
-                        <TableCell><Typography variant="h4" fontWeight={700}>{inShop - stock}</Typography></TableCell>
+                        {/* <TableCell><Typography variant="h4" fontWeight={700}>{inShop - stockQty}</Typography></TableCell> */}
+                        <TableCell>
+                            <Stack direction='row' ref={displayShowRef}>
+                                <Stack direction='column' justifyContent='center' pr={1}><Typography variant="h4" fontWeight={700}>{displayQty}</Typography></Stack>
+                                <IconButton onClick={displayEditBtnOnClick}><EditIcon fontSize="large" /></IconButton>
+                            </Stack>
+                            <Stack component='form' onSubmit={displayUpdateBtnOnClick} direction='row' ref={displayEditRef} sx={{display:'none'}} columnGap={1}>
+                                <TextField inputRef={displayInputRef} />
+                                <Button variant="contained" color='warning' type='submit' >Update</Button>
+                                <Button variant="contained" onClick={displayCancelEditOnClick}>Cancel</Button>
+                            </Stack>
+                        </TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell><Typography variant="h4" fontWeight={700}>Stock:</Typography></TableCell>
                         <TableCell>
                             <Stack direction='row' ref={stockShowRef}>
-                                <Stack direction='column' justifyContent='center' pr={1}><Typography variant="h4" fontWeight={700}>{stock}</Typography></Stack>
-                                <IconButton onClick={editBtnOnClick}><EditIcon fontSize="large" /></IconButton>
+                                <Stack direction='column' justifyContent='center' pr={1}><Typography variant="h4" fontWeight={700}>{stockQty}</Typography></Stack>
+                                <IconButton onClick={stockEditBtnOnClick} sx={{display:'none'}}><EditIcon fontSize="large" /></IconButton>
                             </Stack>
-                            <Stack component='form' onSubmit={updateBtnOnClick} direction='row' ref={stockEditRef} sx={{display:'none'}} columnGap={1}>
-                                <TextField inputRef={inputRef} />
+                            <Stack component='form' onSubmit={stockUpdateBtnOnClick} direction='row' ref={stockEditRef} sx={{display:'none'}} columnGap={1}>
+                                <TextField inputRef={stockInputRef} />
                                 <Button variant="contained" color='warning' type='submit' >Update</Button>
-                                <Button variant="contained" onClick={cancelEditOnClick}>Cancel</Button>
+                                <Button variant="contained" onClick={stockCancelEditOnClick}>Cancel</Button>
                             </Stack>
                         </TableCell>
                     </TableRow>

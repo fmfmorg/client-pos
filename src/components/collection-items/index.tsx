@@ -8,7 +8,7 @@ import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import ImageList from "@mui/material/ImageList"
 import { IDB } from "../../hooks/class-db"
-import { IProductExternal, IProductInternal, ISkuMapItem, StoreNames } from "../../interfaces"
+import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "../../interfaces"
 import SingleItem from "./single-item"
 import Backdrop from "@mui/material/Backdrop"
 import CircularProgress from "@mui/material/CircularProgress"
@@ -20,6 +20,7 @@ import Dialog from "@mui/material/Dialog"
 import Filter from "./filter"
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { ISingleItem } from "./interface"
 
 const CollectionItems = () => {
     const idb = useRef<IDB>(null)
@@ -28,6 +29,7 @@ const CollectionItems = () => {
     const [columns,setColumns] = useState(5)
     const [singleIDs,setSingleIDs] = useState<string[]>([])
     const [setIDs,setSetIDs] = useState<string[]>([])
+    const [singleItems,setSingleItems] = useState<ISingleItem[]>([])
     const [filterOpen,setFilterOpen] = useState(false)
     const [stars,setStars] = useState<number[]>([1,5])
     const updateStars = (v:number[]) => setStars(v)
@@ -39,6 +41,11 @@ const CollectionItems = () => {
         const toDelete = values.filter(e => subTypeIDs.includes(e))
         const newArr = temp.filter(e => !toDelete.includes(e))
         setSubTypeIDs([...newArr])
+    }
+    const [premiumOpts,setPremiumOpts] = useState([1,0])
+    const updatePremium = (v:number) => {
+        if (premiumOpts.includes(v)) setPremiumOpts(premiumOpts.filter(e => e !== v));
+        else setPremiumOpts([...premiumOpts,v])
     }
     const initDB = async() => {
         idb.current = new IDB()
@@ -80,6 +87,74 @@ const CollectionItems = () => {
 
         setFilterOpen(false)
     }
+
+    const updateList = async() => {
+        if (!subTypeIDs.length) {
+            setSingleIDs([])
+            setSetIDs([])
+            setFilterOpen(false)
+            return
+        }
+
+        const [
+            tempAllSkuMapItems,
+            allProductsInternal,
+            allProductsExternal,
+            allOrderItems,
+            allRefundItems,
+        ] = await Promise.all([
+            idb.current.getItems(StoreNames.SkuMapItems) as Promise<ISkuMapItem[]>,
+            idb.current.getItems(StoreNames.ProductsInternal) as Promise<IProductInternal[]>,
+            idb.current.getItems(StoreNames.ProductsExternal) as Promise<IProductExternal[]>,
+            idb.current.getItems(CompleteOrderStoreNames.OrderItems) as Promise<ICompleteOrderItem[]>,
+            idb.current.getItems(CompleteOrderStoreNames.RefundItems) as Promise<IRefundItem[]>,
+        ])
+
+        const allSkuMapItems = [...tempAllSkuMapItems].sort((a,b)=>b.external > a.external ? 1 : -1)
+        const internalIDs = allProductsInternal.filter(e => subTypeIDs.includes(e.productTypeID) && colors.includes(e.metalColorID)).sort((a,b)=>b.id > a.id ? 1 : -1).sort((a,b)=>a.productTypeID - b.productTypeID).map(e => e.id)
+
+        const starMin = Math.min(...stars)
+        const starMax = Math.max(...stars)
+        const productExternalIDs = allProductsExternal.filter(e => e.keepInCollection >= starMin && e.keepInCollection <= starMax && (premiumOpts.length === 1 ? !!e.premium === !!premiumOpts[0] : true)).map(e => e.id)
+        
+        const externalIDs = [...new Set(allSkuMapItems.filter(e => internalIDs.includes(e.internal) && productExternalIDs.includes(e.external)).sort((a,b)=>internalIDs.indexOf(a.internal) - internalIDs.indexOf(b.internal)).map(e => e.external))]
+        const _setIDs = externalIDs.filter(e => allSkuMapItems.filter(d => d.external === e).length > 1)
+        const _singleIDs = !!_setIDs.length ? externalIDs.filter(e => !_setIDs.includes(e)) : [...externalIDs]
+
+        let arr:ISingleItem[] = []
+
+        for (const idExternal of _singleIDs){
+            const idInternal = allSkuMapItems.find(e => e.external === idExternal).internal
+            const productExternal = allProductsExternal.find(e => e.id === idExternal)
+            if (!productExternal) continue;
+            const keepInColl = productExternal.keepInCollection
+            const price = productExternal.price - productExternal.discount
+
+            const productInternal = allProductsInternal.find(e => e.id === idInternal)
+            const receivedQuantity = productInternal.receivedQuantity
+            const orderQty = allOrderItems.filter(e => e.productID === idExternal && e.rl).map(e => e.quantity).reduce((a,b)=>a+b,0)
+            const refundQty = allRefundItems.filter(e => e.productID === idExternal).map(e => e.quantity).reduce((a,b)=>a+b,0)
+            const {variation,url} = productInternal
+
+            const stockQty = Math.max(receivedQuantity - orderQty + refundQty,0)
+            const displayQty = stockQty - (productExternal.stock || 0)
+
+            arr.push({
+                idExternal,
+                idInternal,
+                keepInColl,
+                displayQty,
+                stockQty,
+                price,
+                url,
+                variation,
+                premium:!!productExternal.premium,
+            })
+        }
+        setSingleItems([...arr])
+        setFilterOpen(false)
+    }
+
     const printingStart = () => setPrinting(true)
     const printingEnd = () => setPrinting(false)
     const onBulkUpdate = async() => {
@@ -93,7 +168,10 @@ const CollectionItems = () => {
         try {
             const resp = await fetch('/api/pos/collection-item-bulk-update',{
                 method:'POST',
-                body:JSON.stringify({items:productsToBeUpdated.map(e => ({id:e.id,keepInCollection:e.keepInCollection}))})
+                body:JSON.stringify({items:productsToBeUpdated.map(e => {
+                    const {id,keepInCollection,premium} = e
+                    return {id,keepInCollection,premium}
+                })})
             })
 
             if (resp.ok){
@@ -120,10 +198,11 @@ const CollectionItems = () => {
         dispatchNewEvent(CustomEventKeys.PRINTING_START)
 
         for (const p of productsToBeUpdated){
+            const {keepInCollection,premium} = p
             try {
                 const resp = await fetch('/api/pos/collection-item-slow-update',{
                     method:'POST',
-                    body:JSON.stringify({id:p.id,keepInCollection:p.keepInCollection})
+                    body:JSON.stringify({id:p.id,keepInCollection,premium})
                 })
                 
                 if (resp.ok){
@@ -159,9 +238,9 @@ const CollectionItems = () => {
     },[])
 
     useEffect(()=>{
-        document.addEventListener(CustomEventKeys.COLLECTION_ITEMS_UPDATE,updateIDs)
+        document.addEventListener(CustomEventKeys.COLLECTION_ITEMS_UPDATE,updateList)
         return () => {
-            document.removeEventListener(CustomEventKeys.COLLECTION_ITEMS_UPDATE,updateIDs)
+            document.removeEventListener(CustomEventKeys.COLLECTION_ITEMS_UPDATE,updateList)
         }
     },[subTypeIDs,stars,colors])
 
@@ -176,7 +255,7 @@ const CollectionItems = () => {
                     <Toolbar sx={theme => ({zIndex: theme.zIndex.drawer + 1, display:'flex',flexDirection:'row',justifyContent:'space-between'})}>
                         <Stack direction='row' columnGap={2} sx={{position:'fixed',top:12}}>
                             <Button color="secondary" variant="contained" sx={{fontWeight:'bold',letterSpacing:'0.05rem'}} onClick={toggleFilter} startIcon={<FilterAltIcon />}>Filter</Button>
-                            <Button color="warning" variant="contained" sx={{fontWeight:'bold',letterSpacing:'0.05rem'}} onClick={updateIDs} startIcon={<RefreshIcon />}>Reload</Button>
+                            <Button color="warning" variant="contained" sx={{fontWeight:'bold',letterSpacing:'0.05rem'}} onClick={updateList} startIcon={<RefreshIcon />}>Reload</Button>
                         </Stack>
                         <Stack direction='row' columnGap={2} sx={{position:'fixed',top:12,right:16}}>
                             <Button color="warning" variant="contained" sx={{fontWeight:'bold',letterSpacing:'0.05rem'}} onClick={onSlowUpdate}>Slow Update</Button>
@@ -184,7 +263,7 @@ const CollectionItems = () => {
                         </Stack>
                     </Toolbar>
                     <ImageList cols={columns} sx={{overflowY:'visible'}}>
-                        {singleIDs.map(id => <SingleItem key={id} {...{id}} />)}
+                        {singleItems.map(e => <SingleItem key={e.idExternal} {...e} />)}
                     </ImageList>
                 </Box>
                 <Alerts />
@@ -197,6 +276,8 @@ const CollectionItems = () => {
                     colorOpts,
                     colors,
                     updateColors,
+                    premiumOpts,
+                    updatePremium,
                 }}>
                     <Filter />
                 </FilterContext>

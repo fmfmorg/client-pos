@@ -66,6 +66,9 @@ export interface ICompleteOrderItem {
     price:number;
     discount:number;
     quantity:number;
+    uploaded?:boolean;
+    rl?:boolean;
+    fk?:boolean;
 }
 
 export interface ICompleteOrderDiscountItem {
@@ -74,6 +77,9 @@ export interface ICompleteOrderDiscountItem {
     name:string;
     amount:number;
     orderInReceipt:number;
+    uploaded?:boolean;
+    rl?:boolean;
+    fk?:boolean;
 }
 
 export interface IProductExternal {
@@ -81,6 +87,7 @@ export interface IProductExternal {
     price:number;
     discount:number;
     keepInCollection:number;
+    premium?:boolean;
     stock?:number;
     dbToBeUpdated?:boolean;
     stockLevelToBeUpdated?:boolean;
@@ -128,4 +135,9 @@ export interface IRefundItem {
 export interface IAlertMessage {
     color:AlertColor;
     message:string;
+}
+
+export interface IListDetails {
+    start:number;
+    end:number;
 }

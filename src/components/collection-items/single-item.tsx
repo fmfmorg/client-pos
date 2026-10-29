@@ -2,11 +2,87 @@ import Checkbox from "@mui/material/Checkbox"
 import ImageListItem from "@mui/material/ImageListItem"
 import ImageListItemBar from "@mui/material/ImageListItemBar"
 import Typography from "@mui/material/Typography"
-import { SyntheticEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, SyntheticEvent, useEffect, useRef, useState } from "react"
 import Rating from '@mui/material/Rating';
 import { IDB } from "../../hooks/class-db"
 import { CompleteOrderStoreNames, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from "../../interfaces"
+import { ISingleItem } from "./interface"
 
+const SingleItem = (
+    {
+        idExternal,
+        idInternal,
+        keepInColl,
+        displayQty,
+        stockQty,
+        price,
+        url,
+        variation,
+        premium,
+    }:ISingleItem
+) => {
+    const idb = useRef<IDB>(null)
+    const [_keepInColl,setKeepInColl] = useState(keepInColl)
+    const [_premium,setPremium] = useState(premium)
+    const initDB = async() => {
+        idb.current = new IDB()
+        await idb.current.initDB()
+    }
+
+    const starOnChange = async(_:SyntheticEvent,value:number | null) => {
+        const newValue = value | 0
+        setKeepInColl(newValue)
+        const i = await idb.current.getItem(idExternal,StoreNames.ProductsExternal) as IProductExternal
+        await idb.current.updateItem({...i,keepInCollection:newValue,dbToBeUpdated:true},StoreNames.ProductsExternal)
+    }
+
+    const premiumOnChange = async(e:ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.checked
+        setPremium(newValue)
+        const i = await idb.current.getItem(idExternal,StoreNames.ProductsExternal) as IProductExternal
+        await idb.current.updateItem({...i,premium:newValue,dbToBeUpdated:true},StoreNames.ProductsExternal)
+    }
+
+    useEffect(()=>{
+        initDB()
+    },[])
+
+    useEffect(()=>setKeepInColl(keepInColl),[keepInColl])
+
+    return (
+        <ImageListItem sx={{aspectRatio: "1 / 1"}}>
+            <a style={{height:'100%'}} href={url} target="_blank">
+                <img 
+                    src={`https://media-admin.fairymade.co/${idInternal}.avif`}
+                    width='100%'
+                    title={variation}
+                    style={{objectFit:'cover',objectPosition:'center',width:'100%',height:'100%'}}
+                />
+            </a>
+            <ImageListItemBar 
+                title={
+                    <>
+                    <Typography variant='body2'>{idExternal.substring(1)} - £{(price * 0.01).toFixed(0)} - {displayQty}pc - {stockQty}pc</Typography>
+                    <Rating 
+                        value={_keepInColl}
+                        onChange={starOnChange}
+                        size="small"
+                    />
+                    </>
+                } 
+                actionIcon={<Checkbox sx={{'.MuiSvgIcon-root':{fill:'#fff'}}} checked={_premium} onChange={premiumOnChange} />}
+                sx={{
+                    '.MuiImageListItemBar-titleWrap':{
+                        py:0,
+                        pl:1,
+                    }
+                }}
+            />
+        </ImageListItem>
+    )
+}
+
+/*
 const SingleItem = ({id}:{id:string}) => {
     const idb = useRef<IDB>(null)
     const [internalID,setInternalID] = useState('')
@@ -41,7 +117,7 @@ const SingleItem = ({id}:{id:string}) => {
 
             const productInternal = allProductsInternal.find(e => e.id === _internalID)
             const receivedQuantity = productInternal.receivedQuantity
-            const orderQty = allOrderItems.filter(e => e.productID === id).map(e => e.quantity).reduce((a,b)=>a+b,0)
+            const orderQty = allOrderItems.filter(e => e.productID === id && e.rl).map(e => e.quantity).reduce((a,b)=>a+b,0)
             const refundQty = allRefundItems.filter(e => e.productID === id).map(e => e.quantity).reduce((a,b)=>a+b,0)
             setVariation(productInternal.variation)
 
@@ -92,5 +168,6 @@ const SingleItem = ({id}:{id:string}) => {
         </ImageListItem>
     )
 }
+*/
 
 export default SingleItem

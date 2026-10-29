@@ -25,6 +25,8 @@ const Filter = () => {
         colorOpts,
         colors,
         updateColors,
+        premiumOpts,
+        updatePremium,
     } = useContext(FilterContext)
     const {subTypeIDs} = useContext(SubTypeContext)
     const [count,setCount] = useState(0)
@@ -51,7 +53,7 @@ const Filter = () => {
             const tempProductExternalIDs = allSkuMapItems.filter(e => productInternalIDs.includes(e.internal)).map(e => e.external)
             const minStar = Math.min(...starsTemp)
             const maxStar = Math.max(...starsTemp)
-            const productsExternal = allProductsExternal.filter(e => tempProductExternalIDs.includes(e.id) && e.keepInCollection >= minStar && e.keepInCollection <= maxStar)
+            const productsExternal = allProductsExternal.filter(e => tempProductExternalIDs.includes(e.id) && e.keepInCollection >= minStar && e.keepInCollection <= maxStar && (premiumOpts.length === 1 ? !!e.premium === !!premiumOpts[0] : true))
             setCount(productsExternal.length)
         } catch (e) {}
 
@@ -76,7 +78,7 @@ const Filter = () => {
 
     useEffect(()=>{
         updateItemCount()
-    },[starsTemp,colorsTemp,subTypeIDs])
+    },[starsTemp,colorsTemp,subTypeIDs,premiumOpts])
 
     return (
         <>
@@ -105,6 +107,20 @@ const Filter = () => {
                                         id={id} 
                                         checked={colorsTemp.includes(id)} 
                                         updateColor={()=>updateColorsTemp(id)}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Premium</TableCell>
+                        <TableCell>
+                            <FormGroup>
+                                {[1,0].map(opt => (
+                                    <FormControlLabel 
+                                        key={opt} 
+                                        control={<Checkbox sx={{py:0.5}} onChange={() => updatePremium(opt)} checked={premiumOpts.includes(opt)} />} 
+                                        label={!!opt ? 'Premium' : 'Non-Premium'} 
                                     />
                                 ))}
                             </FormGroup>

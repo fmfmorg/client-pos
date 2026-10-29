@@ -1,13 +1,55 @@
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { IDB } from '../../../hooks/class-db';
-import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderItem, IProductExternal, IProductInternal, IRefundItem, ISkuMapItem, StoreNames } from '../../../interfaces';
-import { DateContext } from '../../../misc/date-selector/date-contexts';
 import Typography from '@mui/material/Typography';
-import Images from './images';
-import { broadcastChannelName, CustomEventKeys } from '@misc';
+import { ISalesRow } from './interface';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
 
+const ProductRow = (
+    {
+        idExternal,
+        price,
+        quantitySold,
+        quantityLeft,
+        idsInternal,
+    }:ISalesRow
+) => {
+    return (
+        <TableRow>
+            <TableCell>
+                <Typography>{idExternal}</Typography>
+                <Typography>£{(price * 0.01).toFixed(2)}</Typography>
+                <Typography variant='h5'>{quantitySold} pc</Typography>
+                <Typography>Left: {quantityLeft} pc</Typography>
+            </TableCell>
+            <TableCell>
+                <ImageList cols={10}>
+                    {idsInternal.map(id => (
+                        <ImageListItem sx={{aspectRatio: "1 / 1"}} key={id}>
+                            <img 
+                                src={`https://media-admin.fairymade.co/${id}.avif`} 
+                                loading='lazy' 
+                                width='100%'
+                                style={{objectFit:'cover',objectPosition:'center',width:'100%',height:'100%'}}
+                            />
+                            <ImageListItemBar 
+                                title={<Typography variant='body2'>{id}</Typography>}
+                                sx={{
+                                    '.MuiImageListItemBar-titleWrap':{
+                                        py:0,textAlign:'center'
+                                    }
+                                }}
+                            />
+                        </ImageListItem>
+                    ))}
+                </ImageList>
+            </TableCell>
+        </TableRow>
+    )
+}
+
+/*
 const ProductRow = ({id}:{id:string}) => {
     const broadcastChannel = useRef<BroadcastChannel>(null)
     const idb = useRef<IDB>(null)
@@ -104,5 +146,6 @@ const ProductRow = ({id}:{id:string}) => {
         </TableRow>
     )
 }
+*/
 
 export default ProductRow

@@ -13,7 +13,7 @@ import OrderDetails from './order-details';
 import Summary from './summary';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { broadcastChannelName, CustomEventKeys } from '@misc';
+import { broadcastChannelName, CustomEventKeys, dispatchNewEvent } from '@misc';
 import Stack from '@mui/material/Stack';
 import UploadOrderButtons from './toolbar-btns/upload-orders';
 import DownloadOrderButton from './toolbar-btns/download-orders';
@@ -27,7 +27,11 @@ import DownloadStockLevelsFromDB from './toolbar-btns/download-stock-level-from-
 const entryColumnWidth = 3
 
 const CashIn = () => {
-    const workerRef = useRef<Worker>(null)
+    const uploadOrderWorkerRef = useRef<Worker>(null)
+    const regularUploadWorkerRef = useRef<Worker>(null)
+    const uploading = useRef(false)
+    const uploadTimeout = useRef<NodeJS.Timeout>(null)
+
     const toolbarRef = useRef<HTMLDivElement>(null)
     const broadcastChannel = useRef<BroadcastChannel>(null)
     const [printing,setPrinting] = useState(false)
@@ -55,7 +59,36 @@ const CashIn = () => {
         await createNewOrder()
         await idb.current.deleteOrder(e.detail.orderToDelete)
     }
-    const onOrderComplete = () => broadcastChannel.current.postMessage(CustomEventKeys.ORDER_COMPLETE)
+
+    const regularUploadStart = () => {
+        if (!uploading.current){
+            uploading.current = true
+            regularUploadWorkerRef.current.postMessage(null)
+        }
+    }
+    const restartUploadTimer = () => {
+        uploading.current = false
+        uploadTimeout.current = setTimeout(regularUploadStart,60000)
+    }
+    const onOrderComplete = (e:CustomEvent<string>) => {
+        broadcastChannel.current.postMessage(CustomEventKeys.ORDER_COMPLETE)
+
+        const orderID = e.detail
+
+        if (!uploading.current) {
+            uploading.current = true
+            clearTimeout(uploadTimeout.current)
+            uploadOrderWorkerRef.current.postMessage(orderID)
+        }
+    }
+    const onOrderUploaded = (e:MessageEvent<string>) => {
+        restartUploadTimer()
+        dispatchNewEvent(CustomEventKeys.ORDER_UPLOADED,e.data)
+    }
+    const onRegularUploadComplete = (e:MessageEvent<boolean>) => {
+        restartUploadTimer()
+        if (e.data) dispatchNewEvent(CustomEventKeys.REGULAR_UPLOAD_COMPLETE)
+    }
 
     const printingStart = () => setPrinting(true)
     const printingEnd = () => setPrinting(false)
@@ -63,11 +96,14 @@ const CashIn = () => {
     useEffect(()=>{
         broadcastChannel.current = new BroadcastChannel(broadcastChannelName)
 
-        // workerRef.current = new Worker(new URL('./workers/sync-worker.ts', import.meta.url))
+        uploadOrderWorkerRef.current = new Worker(new URL('./workers/upload-order.ts', import.meta.url))
+        regularUploadWorkerRef.current = new Worker(new URL('./workers/upload-with-interval.ts', import.meta.url))
         
-        // workerRef.current.onmessage = (e) => console.log(e.data)
+        uploadOrderWorkerRef.current.onmessage = onOrderUploaded
 
-        // workerRef.current.postMessage('abc')
+        regularUploadWorkerRef.current.onmessage = onRegularUploadComplete
+
+        restartUploadTimer()
 
 
         initDB()
@@ -81,7 +117,9 @@ const CashIn = () => {
         document.title = 'Till'
 
         return () => {
-            // workerRef.current.terminate()
+            clearTimeout(uploadTimeout.current)
+            uploadOrderWorkerRef.current.terminate()
+            regularUploadWorkerRef.current.terminate()
             document.removeEventListener(CustomEventKeys.PRINTING_START,printingStart)
             document.removeEventListener(CustomEventKeys.PRINTING_END,printingEnd)
             document.removeEventListener(CustomEventKeys.NEXT_ORDER,onNextOrder)
@@ -101,7 +139,7 @@ const CashIn = () => {
                     <Toolbar ref={toolbarRef} sx={theme => ({zIndex: theme.zIndex.drawer + 1, display:'flex',flexDirection:'row',justifyContent:'flex-end'})}>
                         <Stack direction='row' columnGap={2}>
                             <UpdateProductsButton />
-                            <UploadOrderButtons />
+                            {/* <UploadOrderButtons /> */}
                             {/* <SetAllOrdersAsUploaded /> */}
                             {/* <DownloadOrderButton /> */}
                             {/* <UpdateIdbDataButton /> */}

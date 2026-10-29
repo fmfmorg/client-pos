@@ -17,6 +17,8 @@ export const FilterContext = createContext<{
     colorOpts:number[];
     colors:number[];
     updateColors:(v:number[])=>void;
+    premiumOpts:number[];
+    updatePremium:(v:number)=>void;
 }>({
     stars:[],
     updateStars:()=>{},
@@ -24,4 +26,6 @@ export const FilterContext = createContext<{
     colorOpts:[],
     colors:[],
     updateColors:()=>{},
+    premiumOpts:[],
+    updatePremium:()=>{},
 })

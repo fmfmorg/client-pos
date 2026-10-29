@@ -584,7 +584,9 @@ export class IDB {
             productID:e,
             price:thisOrderProducts.find(d => d.id === e).price,
             discount:thisOrderProducts.find(d => d.id === e).discount,
-            quantity:thisOrderItems.filter(d => d.productID === e).map(d => d.qty).reduce((a,b)=>a+b)
+            quantity:thisOrderItems.filter(d => d.productID === e).map(d => d.qty).reduce((a,b)=>a+b),
+            rl:true,
+            fk:true,
         }))
 
         await this.createItems(completeOrderItems, CompleteOrderStoreNames.OrderItems)
@@ -600,6 +602,8 @@ export class IDB {
                 name:e.name,
                 amount:e.amount,
                 orderInReceipt:e.orderInReceipt,
+                rl:true,
+                fk:true,
             }))
             await this.createItems(completeOrderDiscountItems, CompleteOrderStoreNames.OrderDiscountItems)
         }
@@ -873,7 +877,7 @@ export class IDB {
 
         dispatchNewEvent(CustomEventKeys.ORDER_STATUS_UPDATED)
         dispatchNewEvent(CustomEventKeys.PRINTING_END)
-        dispatchNewEvent(CustomEventKeys.ORDER_COMPLETE)
+        dispatchNewEvent(CustomEventKeys.ORDER_COMPLETE,completeOrderNumber)
 
         // await this.uploadNewOrder(completeOrderNumber)
     }

@@ -2,7 +2,7 @@ import { CustomEventKeys, dispatchNewEvent } from "@misc";
 import Button from "@mui/material/Button"
 import { useEffect, useRef } from "react";
 import { IDB } from "../../../hooks/class-db";
-import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem } from "../../../interfaces";
+import { CompleteOrderStoreNames, ICompleteOrder, ICompleteOrderDiscountItem, ICompleteOrderItem, IRefundItem } from "../../../interfaces";
 
 const DownloadOrderButton = () => {
     const idb = useRef<IDB>(null);
@@ -21,14 +21,28 @@ const DownloadOrderButton = () => {
                 dispatchNewEvent(CustomEventKeys.PRINTING_END)
                 return 
             }
-            const {orders, orderItems, orderDiscountItems} = await resp.json() as {
+            const {orders, orderItems, orderDiscountItems,refunds} = await resp.json() as {
                 orders: ICompleteOrder[];
                 orderItems: ICompleteOrderItem[];
                 orderDiscountItems: ICompleteOrderDiscountItem[];
+                refunds:IRefundItem[];
             }
+
+            await Promise.all([
+                CompleteOrderStoreNames.Orders,
+                CompleteOrderStoreNames.OrderItems,
+                CompleteOrderStoreNames.OrderDiscountItems,
+                CompleteOrderStoreNames.RefundItems
+            ].map(e => idb.current.clearStore(e)))
+
+            // console.log(orders)
+            // console.log(orderItems)
+            // console.log(orderDiscountItems)
+            // console.log(refunds)
             await idb.current.createItems(orders,CompleteOrderStoreNames.Orders)
             await idb.current.createItems(orderItems,CompleteOrderStoreNames.OrderItems)
             await idb.current.createItems(orderDiscountItems,CompleteOrderStoreNames.OrderDiscountItems)
+            await idb.current.createItems(refunds,CompleteOrderStoreNames.RefundItems)
         } catch (e) {
             console.log(e)
         }

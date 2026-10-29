@@ -36,11 +36,20 @@ export enum CustomEventKeys {
     UPLOAD_FAILED = 'upload_failed',
 
     REFUND_SUBMITED = 'refund_submitted',
+    REFUND_UPLOADED = 'refund_uploaded',
 
     COLLECTION_ITEMS_UPDATE = 'collection_items_update',
 
     STOCK_TO_BE_UPDATED = 'stock_to_be_updated',
     STOCK_UPDATE_REPORT = 'stock_update_report',
+
+    REFRESH_LIST = 'refresh_list',
+
+    ORDER_TO_BE_UPDATED = 'order_to_be_updated',
+    ORDER_UPDATE_REPORT = 'order_update_report',
+
+    ORDER_UPLOADED = 'order_uploaded',
+    REGULAR_UPLOAD_COMPLETE = 'regular_upload_complete',
 }
 
 export const chargeVAT = false

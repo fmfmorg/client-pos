@@ -7,6 +7,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Stack from "@mui/material/Stack";
 import MyDatePicker from "./datepicker";
+import Button from "@mui/material/Button";
+import { dispatchNewEvent } from "../dispatch-new-event";
+import { CustomEventKeys } from "@misc";
+import { IListDetails } from "../../interfaces";
 
 const DateSelector = (
     {
@@ -14,7 +18,7 @@ const DateSelector = (
         filters,
     }:{
         children:JSX.Element;
-        filters?:JSX.Element;
+        filters?:JSX.Element
     }
 ) => {
     const initStartDT = () => {
@@ -33,6 +37,11 @@ const DateSelector = (
         if (isStart) setStart(v);
         else setEnd(v);
     }
+
+    const updateBtnOnClick = () => {
+        const detail:IListDetails = {start,end}
+        dispatchNewEvent(CustomEventKeys.REFRESH_LIST,detail)
+    }
     
     return (
         <Box sx={{width:'100%'}}>
@@ -50,11 +59,12 @@ const DateSelector = (
                         </UpdateDateContext>
                     </LocalizationProvider>
                     {!!filters && filters}
+                    <Button variant="contained" onClick={updateBtnOnClick}>Update</Button>
                 </Stack>
             </Toolbar>
-            <DateContext value={{start,end}}>
+            {/* <DateContext value={{start,end}}> */}
                 {children}
-            </DateContext>
+            {/* </DateContext> */}
         </Box>
     )
 }

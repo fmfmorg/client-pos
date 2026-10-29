@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography"
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react"
 import { CompleteOrderStoreNames, ICompleteOrder } from "../../../../interfaces"
 import { IDB } from "../../../../hooks/class-db"
+import { CustomEventKeys, dispatchNewEvent } from "@misc"
 
 const Notes = () => {
     const {orderNumber} = useContext(OrderNumberContext)
@@ -49,6 +50,7 @@ const Notes = () => {
             order.note = noteInput
             order.dbToBeUpdated = true
             await idb.current.updateItem(order,CompleteOrderStoreNames.Orders)
+            dispatchNewEvent(CustomEventKeys.ORDER_TO_BE_UPDATED,order.id)
         } catch (e) {}
 
         toggleEditMode()
