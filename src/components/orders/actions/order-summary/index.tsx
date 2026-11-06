@@ -37,8 +37,8 @@ const OrderSummary = () => {
                 idb.current.getItems(CompleteOrderStoreNames.OrderDiscountItems) as Promise<ICompleteOrderDiscountItem[]>,
                 idb.current.getItem(orderNumber,CompleteOrderStoreNames.Orders) as Promise<ICompleteOrder>,
             ])
-            setSubtotal(allOrderItems.filter(e => e.orderID === orderNumber).map(e => (e.price - e.discount) * e.quantity).reduce((a,b)=>a+b,0))
-            const discountItems = allDiscountItems.filter(e => e.orderID === orderNumber)
+            setSubtotal(allOrderItems.filter(e => e.orderID === orderNumber && e.rl).map(e => (e.price - e.discount) * e.quantity).reduce((a,b)=>a+b,0))
+            const discountItems = allDiscountItems.filter(e => e.orderID === orderNumber && e.rl)
             setDiscount(!!discountItems.length ? discountItems.map(e => e.amount).reduce((a,b)=>a+b,0) : 0)
             setDiscountIDs(discountItems.sort((a,b)=>a.orderInReceipt - b.orderInReceipt).map(e => e.id))
 

@@ -66,8 +66,8 @@ const ListBody = () => {
         for (const id of _orderNumbers) {
             const order = allOrders.find(e => e.id === id)
             const paymentMethod = order.paymentMethod
-            const stt = allOrderItems.filter(e => e.orderID === id).map(e => e.price * e.quantity).reduce((a,b) => a+b,0)
-            const discount = allOrderDiscounts.filter(e => e.orderID === id).map(e => e.amount).reduce((a,b) => a+b,0)
+            const stt = allOrderItems.filter(e => e.orderID === id && e.rl).map(e => e.price * e.quantity).reduce((a,b) => a+b,0)
+            const discount = allOrderDiscounts.filter(e => e.orderID === id && e.rl).map(e => e.amount).reduce((a,b) => a+b,0)
             const refunds = allRefunds.filter(e => e.orderID === id).map(e => e.amount * e.quantity).reduce((a,b) => a+b,0)
 
             _orderItems.push({

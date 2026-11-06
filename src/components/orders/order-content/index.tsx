@@ -24,7 +24,7 @@ const OrderContent = () => {
     const loadOrder = async() => {
         try {
             const allOrderItems = await idb.current.getItems(CompleteOrderStoreNames.OrderItems) as ICompleteOrderItem[]
-            setItemIDs(allOrderItems.filter(e => e.orderID === orderNumber).map(e => e.id))
+            setItemIDs(allOrderItems.filter(e => e.orderID === orderNumber && e.rl).map(e => e.id))
         } catch (e) {}
     }
 
